@@ -1,30 +1,22 @@
 package com.charapadev.pokemon;
 
-import java.util.Map;
-
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class PokemonService {
-    
-    private Map<String, String> pokemons = Map.of(
-        // Arceus variants
-        "Arceus-*", "Arceus",
 
-        // Samurott variants
-        "Samurott-Hisui", "Samurott",
+    public SpeciesVariant resolveSpecificPokemon(String name) {
+        boolean hasVariant = name.contains("-");
 
-        // Rotom variants
-        "Rotom-Wash", "Rotom",
+        if (hasVariant) {
+            String[] parts = name.split("-", 2);
+            String generalName = parts[0];
+            String variant = parts[1];
 
-        // Hoopa variants
-        "Hoopa-Unbound", "Hoopa"
-    );
+            return new SpeciesVariant(generalName, variant);
+        }
 
-    public String resolveSpecificPokemon(String name) {
-        String newName = pokemons.get(name);
-
-        return newName != null ? newName : name; 
+        return new SpeciesVariant(name, null);
     }
 
 }

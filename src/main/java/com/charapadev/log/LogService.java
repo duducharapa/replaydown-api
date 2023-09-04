@@ -9,6 +9,7 @@ import com.charapadev.player.Player;
 import com.charapadev.player.PlayerNumber;
 import com.charapadev.pokemon.Pokemon;
 import com.charapadev.pokemon.PokemonService;
+import com.charapadev.pokemon.SpeciesVariant;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -50,7 +51,7 @@ public class LogService {
      * @param pokemonInfo The pokemon stringfied information.
      * @return The pokemon instance.
      */
-    private String parsePokemonName(String pokemonInfo) {
+    private SpeciesVariant parsePokemonName(String pokemonInfo) {
         String extractedName =  pokemonInfo.contains(":") ?
             pokemonInfo.split(": ")[1] :
             pokemonInfo.split(",")[0];
@@ -111,12 +112,13 @@ public class LogService {
 
         switch (actionType) {
             case POKEMON:
-                String pokeName = parsePokemonName(params.get(2));
-                Pokemon pokemon = new Pokemon(pokeName);
+                SpeciesVariant pokemonInfo = parsePokemonName(params.get(2));
+                Pokemon pokemon = new Pokemon(pokemonInfo.generalName(), pokemonInfo.variant());
 
                 return new TeamLog(player, pokemon);
             case MOVESET:
-                String pokemonNickname = parsePokemonName(params.get(1));
+                String pokemonNickname = parsePokemonName(params.get(1))
+                    .generalName();
                 String move = params.get(2);
 
                 return new MoveLog(player, pokemonNickname, move);
@@ -154,7 +156,7 @@ public class LogService {
 
                 System.out.println(moveLog);
                 Pokemon pokemonFound = pokemonOwner.getTeam().stream()
-                    .filter(pkmn -> pkmn.getName().equals(moveLog.getPokemonNickname()))
+                    .filter(pkmn -> pkmn.getSpeciesName().equals(moveLog.getPokemonNickname()))
                     .findFirst()
                     .orElseThrow();
 
