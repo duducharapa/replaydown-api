@@ -9,8 +9,10 @@ package com.charapadev.log;
 public enum LogType {
     // Indicates that a pokemon from one of players is shown
     POKEMON("poke"),
-    // Indicate that some pokemon from one of players used a move 
-    MOVESET("move");
+    // Indicates that some pokemon from one of players used a move 
+    MOVESET("move"),
+    // Indicates that some pokemon is entering to battle
+    SWITCH("switch");
     
     private final String value;
 

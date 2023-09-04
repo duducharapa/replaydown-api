@@ -24,7 +24,8 @@ public class LogService {
     // To see the details of which log should do, see LogType instance.
     private Map<String, LogType> actions = Map.of(
         "poke", LogType.POKEMON,
-        "move", LogType.MOVESET
+        "move", LogType.MOVESET,
+        "switch", LogType.SWITCH
     );
     
     // The separator used on Showdown logs
@@ -122,6 +123,12 @@ public class LogService {
                 String move = params.get(2);
 
                 return new MoveLog(player, pokemonNickname, move);
+            case SWITCH:
+                pokemonNickname = parsePokemonName(params.get(1))
+                    .generalName();
+                String pokemonName = params.get(2).split(", ")[0];
+
+                return new SwitchLog(player, pokemonName, pokemonNickname);
             default:
                 return null;
         }
@@ -156,13 +163,30 @@ public class LogService {
 
                 System.out.println(moveLog);
                 Pokemon pokemonFound = pokemonOwner.getTeam().stream()
-                    .filter(pkmn -> pkmn.getSpeciesName().equals(moveLog.getPokemonNickname()))
+                    .filter(pkmn -> {
+                        return pkmn.getSpeciesName().equals(moveLog.getPokemonNickname()) ||
+                            pkmn.getNickname().equals(moveLog.getPokemonNickname());
+                    })
                     .findFirst()
                     .orElseThrow();
 
                 pokemonFound.addMove(moveLog.getMove());
 
                 break;
+
+            case SWITCH:
+                SwitchLog switchLog = (SwitchLog) log;
+
+                pokemonOwner = switchLog.getPlayer() == PlayerNumber.P1 ?
+                    game.getPlayer1() :
+                    game.getPlayer2();
+
+                pokemonFound = pokemonOwner.getTeam().stream()
+                    .filter(pkmn -> pkmn.getName().equals(switchLog.getPokemonName()))
+                    .findFirst()
+                    .orElseThrow();
+
+                pokemonFound.setNickname(switchLog.getPokemonNickname());
 
             default:
                 break;

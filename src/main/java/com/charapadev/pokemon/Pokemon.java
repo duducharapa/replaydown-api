@@ -9,6 +9,7 @@ public class Pokemon {
 
     private String name;
     private String variant;
+    private String nickname;
     private Set<String> moves = new HashSet<>();
 
     // Constructors
@@ -31,13 +32,19 @@ public class Pokemon {
         return name;
     }
 
+    @JsonIgnore
+    public String getVariant() {
+        return variant;
+    }
+
     public Set<String> getMoves() {
         return moves;
     }
 
-    @JsonIgnore
-    public String getVariant() {
-        return variant;
+    public String getNickname() {
+        return nickname != null ?
+            nickname :
+            name;
     }
 
     // Setters
@@ -49,12 +56,16 @@ public class Pokemon {
         this.variant = variant;
     }
 
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public void addMove(String move) {
         if (moves.size() < 4) moves.add(move);
     }
 
     public String toString() {
-        return String.format("[name=%s, moves=%s]", name, moves);
+        return String.format("[name=%s, nickname=%s moves=%s]", name, nickname, moves);
     }
     
 }
