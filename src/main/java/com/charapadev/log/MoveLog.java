@@ -30,22 +30,9 @@ public class MoveLog extends Log {
         return move;
     }
 
-    // Setters
-    public void setPlayer(PlayerNumber player) {
-        this.player = player;
-    }
-
-    public void setPokemonNickname(String pokemonNickname) {
-        this.pokemonNickname = pokemonNickname;
-    }
-
-    public void setMove(String move) {
-        this.move = move;
-    }
-
     @Override
     public String toString() {
-        return String.format("[player=%s, type=%s, pokemonNickname=%s, move = %s]", player, type, pokemonNickname, move);
+        return String.format("[player=%s, type=%s, pokemonNickname=%s, move=%s]", player, type, pokemonNickname, move);
     }
 
 }

@@ -25,13 +25,4 @@ public class TeamLog extends Log {
         return pokemon;
     }
 
-    // Setters
-    public void setPlayer(PlayerNumber player) {
-        this.player = player;
-    }
-
-    public void setPokemon(Pokemon pokemon) {
-        this.pokemon = pokemon;
-    }
-
 }

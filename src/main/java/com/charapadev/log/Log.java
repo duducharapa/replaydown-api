@@ -14,9 +14,4 @@ public abstract class Log {
         return type;
     }
 
-    // Setters
-    public void setType(LogType type) {
-        this.type = type;
-    }
-    
 }

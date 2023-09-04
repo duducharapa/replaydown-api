@@ -16,6 +16,7 @@ public class Pokemon {
     public Pokemon(String name, String variant) {
         this.name = name;
         this.variant = variant;
+        this.nickname = name;
     }
 
     // Getters

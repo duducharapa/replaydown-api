@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import com.charapadev.game.Game;
 import com.charapadev.player.Player;
 import com.charapadev.player.PlayerNumber;
+import com.charapadev.player.PlayerService;
 import com.charapadev.pokemon.Pokemon;
 import com.charapadev.pokemon.PokemonService;
 import com.charapadev.pokemon.SpeciesVariant;
@@ -19,6 +20,9 @@ public class LogService {
 
     @Inject
     private PokemonService pokemonService;
+
+    @Inject
+    private PlayerService playerService;
 
     // Actions related to logs
     // To see the details of which log should do, see LogType instance.
@@ -57,7 +61,7 @@ public class LogService {
             pokemonInfo.split(": ")[1] :
             pokemonInfo.split(",")[0];
 
-        return pokemonService.resolveSpecificPokemon(extractedName);
+        return pokemonService.extractSpeciesVariants(extractedName);
     }
 
     /**
@@ -113,17 +117,38 @@ public class LogService {
 
         switch (actionType) {
             case POKEMON:
+                /*
+                 * The presentations of pokémons contains your name and owner.
+                 * 
+                 * An example: |poke|p1|Sneasler, M|
+                 * Then, after split, the Pokémon name will be on position 2
+                 * and the player who belongs in position 1.
+                 */
                 SpeciesVariant pokemonInfo = parsePokemonName(params.get(2));
                 Pokemon pokemon = new Pokemon(pokemonInfo.generalName(), pokemonInfo.variant());
 
                 return new TeamLog(player, pokemon);
             case MOVESET:
+                /*
+                 * The pokémon using a move.
+                 * 
+                 * An example: |move|p1a: Sneasler|Close Combat|p2a: I hear caw caw caw
+                 * Then, after split, the Pokémon nickname and player who belongs will be on position 1, separated by colon,
+                 * and the move used on position 2.
+                 */
                 String pokemonNickname = parsePokemonName(params.get(1))
                     .generalName();
                 String move = params.get(2);
 
                 return new MoveLog(player, pokemonNickname, move);
             case SWITCH:
+                /*
+                 * The user switching a pokémon.
+                 * 
+                 * An example: |switch|p1a: Paramedic|Chansey, F, shiny|704/704
+                 * Then, after split, the player will be on position 1 with the nickname of pokémon, separated by colon,
+                 * and the species name on position 2.
+                 */
                 pokemonNickname = parsePokemonName(params.get(1))
                     .generalName();
                 String pokemonName = params.get(2).split(", ")[0];
@@ -143,51 +168,55 @@ public class LogService {
     public void resolve(Game game, Log log) {
         switch (log.getType()) {
             case POKEMON:
+                /*
+                 * The POKEMON action tries to find on given line:
+                 * - The player's who pokémon belongs;
+                 * - The pokémon itself.
+                 * 
+                 * After find these variables, adds the pokémon to player's team.
+                 */
                 TeamLog teamLog = (TeamLog) log;
-                Pokemon pokemon = teamLog.getPokemon();
 
-                if (teamLog.getPlayer() == PlayerNumber.P1) {
-                    game.getPlayer1().addPokemon(pokemon);
-                } else {
-                    game.getPlayer2().addPokemon(pokemon);
-                }
+                Pokemon pokemon = teamLog.getPokemon();
+                Player pokemonOwner = playerService.getPlayerFromGame(game, teamLog.getPlayer());
+                
+                pokemonOwner.addPokemon(pokemon);
 
                 break;
-            
             case MOVESET:
+                /*
+                 * The MOVESET action tries to find on given line:
+                 * - The player's who pokémon belongs;
+                 * - The pokémon using the move;
+                 * - The move that will be used by.
+                 * 
+                 * After find these variables, add the move to desired pokémon's movepool.
+                 */
                 MoveLog moveLog = (MoveLog) log;
                 
-                Player pokemonOwner = moveLog.getPlayer() == PlayerNumber.P1 ?
-                    game.getPlayer1() :
-                    game.getPlayer2();
-
-                System.out.println(moveLog);
-                Pokemon pokemonFound = pokemonOwner.getTeam().stream()
-                    .filter(pkmn -> {
-                        return pkmn.getSpeciesName().equals(moveLog.getPokemonNickname()) ||
-                            pkmn.getNickname().equals(moveLog.getPokemonNickname());
-                    })
-                    .findFirst()
-                    .orElseThrow();
+                pokemonOwner = playerService.getPlayerFromGame(game, moveLog.getPlayer());
+                Pokemon pokemonFound = pokemonService.findByNickname(pokemonOwner, moveLog.getPokemonNickname());
 
                 pokemonFound.addMove(moveLog.getMove());
 
                 break;
-
             case SWITCH:
+                /*
+                 * The SWITCH action tries to find on line:
+                 * - The player that's switching;
+                 * - The pokémon name that's entering;
+                 * - The pokémon's nickname.
+                 * 
+                 * After find these variables, changes the pokémon nickname from default to given.
+                 */
                 SwitchLog switchLog = (SwitchLog) log;
-
-                pokemonOwner = switchLog.getPlayer() == PlayerNumber.P1 ?
-                    game.getPlayer1() :
-                    game.getPlayer2();
-
-                pokemonFound = pokemonOwner.getTeam().stream()
-                    .filter(pkmn -> pkmn.getName().equals(switchLog.getPokemonName()))
-                    .findFirst()
-                    .orElseThrow();
+                
+                pokemonOwner = playerService.getPlayerFromGame(game, switchLog.getPlayer());
+                pokemonFound = pokemonService.findBySpeciesName(pokemonOwner, switchLog.getPokemonName());
 
                 pokemonFound.setNickname(switchLog.getPokemonNickname());
 
+                break;
             default:
                 break;
         }

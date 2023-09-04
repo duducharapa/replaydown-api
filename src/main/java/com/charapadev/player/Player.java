@@ -17,7 +17,7 @@ public class Player {
     }
 
     public void addPokemon(Pokemon pokemon) {
-        team.add(pokemon);
+        if (team.size() < 6) team.add(pokemon);
     }
 
     // Getters
