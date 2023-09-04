@@ -4,7 +4,7 @@ import com.charapadev.LogType;
 
 public abstract class Log {
     
-    private LogType type;
+    protected LogType type;
 
     // Constructors
     public Log(LogType type) {

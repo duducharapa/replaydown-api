@@ -7,19 +7,26 @@ import java.util.stream.Stream;
 import com.charapadev.LogType;
 import com.charapadev.PlayerNumber;
 import com.charapadev.model.Game;
+import com.charapadev.model.Player;
 import com.charapadev.model.Pokemon;
 import com.charapadev.model.logs.Log;
+import com.charapadev.model.logs.MoveLog;
 import com.charapadev.model.logs.TeamLog;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class LogService {
 
+    @Inject
+    private PokemonService pokemonService;
+
     // Actions related to logs
     // To see the details of which log should do, see LogType instance.
     private Map<String, LogType> actions = Map.of(
-        "poke", LogType.POKEMON
+        "poke", LogType.POKEMON,
+        "move", LogType.MOVESET
     );
     
     // The separator used on Showdown logs
@@ -47,7 +54,11 @@ public class LogService {
      * @return The pokemon instance.
      */
     private String parsePokemonName(String pokemonInfo) {
-        return pokemonInfo.split(",")[0];
+        String extractedName =  pokemonInfo.contains(":") ?
+            pokemonInfo.split(": ")[1] :
+            pokemonInfo.split(",")[0];
+
+        return pokemonService.resolveSpecificPokemon(extractedName);
     }
 
     /**
@@ -60,7 +71,13 @@ public class LogService {
      * @return The player enumeration.
      */
     private PlayerNumber parsePlayerNumeration(String playerInfo) {
-        return playerInfo.equals("p1") ? PlayerNumber.P1 : PlayerNumber.P2;
+        String preparedInfo = playerInfo.contains(":") ?
+            playerInfo.split(":")[0] :
+            playerInfo;
+        
+        return preparedInfo.equals("p1") || preparedInfo.equals("p1a") ?
+            PlayerNumber.P1 :
+            PlayerNumber.P2;
     }
 
     /**
@@ -93,13 +110,19 @@ public class LogService {
 
         if (actionType == null) return null;
 
+        PlayerNumber player = parsePlayerNumeration(params.get(1));
+
         switch (actionType) {
             case POKEMON:
                 String pokeName = parsePokemonName(params.get(2));
                 Pokemon pokemon = new Pokemon(pokeName);
-                PlayerNumber player = parsePlayerNumeration(params.get(1));
 
                 return new TeamLog(player, pokemon);
+            case MOVESET:
+                String pokemonNickname = parsePokemonName(params.get(1));
+                String move = params.get(2);
+
+                return new MoveLog(player, pokemonNickname, move);
             default:
                 return null;
         }
@@ -123,6 +146,26 @@ public class LogService {
                     game.getPlayer2().addPokemon(pokemon);
                 }
 
+                break;
+            
+            case MOVESET:
+                MoveLog moveLog = (MoveLog) log;
+                
+                Player pokemonOwner = moveLog.getPlayer() == PlayerNumber.P1 ?
+                    game.getPlayer1() :
+                    game.getPlayer2();
+
+                System.out.println(moveLog);
+                Pokemon pokemonFound = pokemonOwner.getTeam().stream()
+                    .filter(pkmn -> pkmn.getName().equals(moveLog.getPokemonNickname()))
+                    .findFirst()
+                    .orElseThrow();
+
+                pokemonFound.addMove(moveLog.getMove());
+
+                break;
+
+            default:
                 break;
         }
     }

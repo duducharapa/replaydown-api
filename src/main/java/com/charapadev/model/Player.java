@@ -32,4 +32,8 @@ public class Player {
         this.nickname = nickname;
     }
 
+    public String toString() {
+        return String.format("[nickname=%s, team=%s]", nickname, team);
+    }
+
 }
