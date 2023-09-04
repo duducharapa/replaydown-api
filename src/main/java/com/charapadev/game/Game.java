@@ -1,4 +1,6 @@
-package com.charapadev.model;
+package com.charapadev.game;
+
+import com.charapadev.player.Player;
 
 public class Game {
 

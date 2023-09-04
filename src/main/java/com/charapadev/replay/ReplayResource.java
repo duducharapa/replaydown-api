@@ -1,13 +1,12 @@
-package com.charapadev;
+package com.charapadev.replay;
 
 import java.util.List;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import com.charapadev.model.Game;
-import com.charapadev.model.logs.Log;
-import com.charapadev.service.LogService;
-import com.charapadev.service.ReplayService;
+import com.charapadev.game.Game;
+import com.charapadev.log.Log;
+import com.charapadev.log.LogService;
 import com.charapadev.service.ShowdownService;
 
 import io.smallrye.mutiny.Uni;

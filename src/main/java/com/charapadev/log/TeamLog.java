@@ -1,8 +1,7 @@
-package com.charapadev.model.logs;
+package com.charapadev.log;
 
-import com.charapadev.LogType;
-import com.charapadev.PlayerNumber;
-import com.charapadev.model.Pokemon;
+import com.charapadev.player.PlayerNumber;
+import com.charapadev.pokemon.Pokemon;
 
 public class TeamLog extends Log {
     

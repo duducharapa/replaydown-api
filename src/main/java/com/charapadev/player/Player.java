@@ -1,7 +1,9 @@
-package com.charapadev.model;
+package com.charapadev.player;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import com.charapadev.pokemon.Pokemon;
 
 public class Player {
     

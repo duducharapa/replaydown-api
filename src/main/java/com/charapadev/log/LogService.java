@@ -1,17 +1,14 @@
-package com.charapadev.service;
+package com.charapadev.log;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import com.charapadev.LogType;
-import com.charapadev.PlayerNumber;
-import com.charapadev.model.Game;
-import com.charapadev.model.Player;
-import com.charapadev.model.Pokemon;
-import com.charapadev.model.logs.Log;
-import com.charapadev.model.logs.MoveLog;
-import com.charapadev.model.logs.TeamLog;
+import com.charapadev.game.Game;
+import com.charapadev.player.Player;
+import com.charapadev.player.PlayerNumber;
+import com.charapadev.pokemon.Pokemon;
+import com.charapadev.pokemon.PokemonService;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

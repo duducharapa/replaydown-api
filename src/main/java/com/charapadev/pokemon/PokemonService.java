@@ -1,4 +1,4 @@
-package com.charapadev.service;
+package com.charapadev.pokemon;
 
 import java.util.Map;
 

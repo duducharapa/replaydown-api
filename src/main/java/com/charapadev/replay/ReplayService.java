@@ -1,8 +1,7 @@
-package com.charapadev.service;
+package com.charapadev.replay;
 
-import com.charapadev.model.Game;
-import com.charapadev.model.Player;
-import com.charapadev.model.ReplayData;
+import com.charapadev.game.Game;
+import com.charapadev.player.Player;
 
 import jakarta.enterprise.context.ApplicationScoped;
 

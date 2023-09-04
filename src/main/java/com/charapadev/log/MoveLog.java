@@ -1,7 +1,6 @@
-package com.charapadev.model.logs;
+package com.charapadev.log;
 
-import com.charapadev.LogType;
-import com.charapadev.PlayerNumber;
+import com.charapadev.player.PlayerNumber;
 
 public class MoveLog extends Log {
     

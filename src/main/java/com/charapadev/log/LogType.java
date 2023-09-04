@@ -1,4 +1,4 @@
-package com.charapadev;
+package com.charapadev.log;
 
 /**
  * Refers to types of each log represents on application.

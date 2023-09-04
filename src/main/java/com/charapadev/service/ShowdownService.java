@@ -2,7 +2,7 @@ package com.charapadev.service;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-import com.charapadev.model.ReplayData;
+import com.charapadev.replay.ReplayData;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.GET;

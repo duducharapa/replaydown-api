@@ -1,6 +1,4 @@
-package com.charapadev.model.logs;
-
-import com.charapadev.LogType;
+package com.charapadev.log;
 
 public abstract class Log {
     

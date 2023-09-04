@@ -1,4 +1,4 @@
-package com.charapadev.model;
+package com.charapadev.replay;
 
 public record ReplayData(
     String id,

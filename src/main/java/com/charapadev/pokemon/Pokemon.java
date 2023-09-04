@@ -1,4 +1,4 @@
-package com.charapadev.model;
+package com.charapadev.pokemon;
 
 import java.util.HashSet;
 import java.util.Set;
