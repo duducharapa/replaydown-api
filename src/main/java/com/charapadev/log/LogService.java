@@ -30,7 +30,8 @@ public class LogService {
         "poke", LogType.POKEMON,
         "move", LogType.MOVESET,
         "switch", LogType.SWITCH,
-        "turn", LogType.TURN
+        "turn", LogType.TURN,
+        "win", LogType.WIN
     );
     
     // The separator used on Showdown logs
@@ -114,8 +115,6 @@ public class LogService {
 
         if (actionType == null) return null;
 
-        PlayerNumber player = parsePlayerNumeration(params.get(1));
-
         switch (actionType) {
             case POKEMON:
                 /*
@@ -125,6 +124,7 @@ public class LogService {
                  * Then, after split, the Pokémon name will be on position 2
                  * and the player who belongs in position 1.
                  */
+                PlayerNumber player = parsePlayerNumeration(params.get(1));
                 SpeciesVariant pokemonInfo = parsePokemonName(params.get(2));
                 Pokemon pokemon = new Pokemon(pokemonInfo.generalName(), pokemonInfo.variant());
 
@@ -137,6 +137,7 @@ public class LogService {
                  * Then, after split, the Pokémon nickname and player who belongs will be on position 1, separated by colon,
                  * and the move used on position 2.
                  */
+                player = parsePlayerNumeration(params.get(1));
                 String pokemonNickname = parsePokemonName(params.get(1))
                     .generalName();
                 String move = params.get(2);
@@ -150,6 +151,7 @@ public class LogService {
                  * Then, after split, the player will be on position 1 with the nickname of pokémon, separated by colon,
                  * and the species name on position 2.
                  */
+                player = parsePlayerNumeration(params.get(1));
                 pokemonNickname = parsePokemonName(params.get(1))
                     .generalName();
                 String pokemonName = params.get(2).split(", ")[0];
@@ -163,6 +165,16 @@ public class LogService {
                  * None data is extracted from here. This action just works as a trigger to increment turn.
                  */
                 return new TurnLog();
+            case WIN:
+                /*
+                 * One of players winning the game.
+                 * 
+                 * An example: |win|kdarewolf
+                 * Then, after split, the winner will be on position 1.
+                 */
+                String winner = params.get(1);
+
+                return new WinLog(winner);
             default:
                 return null;
         }
@@ -228,9 +240,25 @@ public class LogService {
                 break;
             case TURN:
                 /*
+                 * The TURN action triggers the turns increment method on Game.
                  * 
+                 * No specific data is used here.
                 */
                 game.addTurn();
+                
+                break;
+            case WIN:
+                /*
+                 * The WIN action tries to find on line:
+                 * - The winner of matcher.
+                 * 
+                 * After find this, sets on game instance the winner.
+                 */
+                WinLog winLog = (WinLog) log;
+
+                game.setWinner(winLog.getWinnerName());
+
+                break;
             default:
                 break;
         }

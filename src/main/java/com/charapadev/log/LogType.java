@@ -14,7 +14,9 @@ public enum LogType {
     // Indicates that some pokemon is entering to battle
     SWITCH("switch"),
     // Indicates a new turn count
-    TURN("turn");
+    TURN("turn"),
+    // Indicates that one player winned the game
+    WIN("win");
     
     private final String value;
 

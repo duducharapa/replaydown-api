@@ -17,6 +17,7 @@ Using the logs available on replays, we can get some informations like:
 
 - The envolved players
 - The Pokémon and your discoverable moves
+- The winner of match and how much turns it lasted
 
 And so much more. The complete list are available [here](#complete-list-of-data).
 
@@ -116,11 +117,11 @@ Currently, the application gets:
 - Pokémon nicknames and species
 - Pokémon discoverable movepools
 - Battle format/tier
+- How much turns the battle reached
+- Who is the winner
 
 And I'm working to extract more informations, like:
 
-- How much turns the battle reached
-- Who is the winner
 - Battle score
 - Reason of winning
 - And so much more!

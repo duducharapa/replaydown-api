@@ -7,6 +7,7 @@ public class Game {
     // Properties
     private String format;
     private int turns = 0;
+    private String winner;
     private Player player1;
     private Player player2;
 
@@ -30,6 +31,10 @@ public class Game {
         return turns;
     }
 
+    public String getWinner() {
+        return winner;
+    }
+
     public Player getPlayer1() {
         return player1;
     }
@@ -41,6 +46,10 @@ public class Game {
     // Setters
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
     }
 
     public void setPlayer1(Player player1) {
