@@ -29,7 +29,8 @@ public class LogService {
     private Map<String, LogType> actions = Map.of(
         "poke", LogType.POKEMON,
         "move", LogType.MOVESET,
-        "switch", LogType.SWITCH
+        "switch", LogType.SWITCH,
+        "turn", LogType.TURN
     );
     
     // The separator used on Showdown logs
@@ -154,6 +155,14 @@ public class LogService {
                 String pokemonName = params.get(2).split(", ")[0];
 
                 return new SwitchLog(player, pokemonName, pokemonNickname);
+            case TURN:
+                /*
+                 * The new turn beginning.
+                 * 
+                 * An example: |turn|1
+                 * None data is extracted from here. This action just works as a trigger to increment turn.
+                 */
+                return new TurnLog();
             default:
                 return null;
         }
@@ -217,6 +226,11 @@ public class LogService {
                 pokemonFound.setNickname(switchLog.getPokemonNickname());
 
                 break;
+            case TURN:
+                /*
+                 * 
+                */
+                game.addTurn();
             default:
                 break;
         }

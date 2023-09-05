@@ -12,7 +12,9 @@ public enum LogType {
     // Indicates that some pokemon from one of players used a move 
     MOVESET("move"),
     // Indicates that some pokemon is entering to battle
-    SWITCH("switch");
+    SWITCH("switch"),
+    // Indicates a new turn count
+    TURN("turn");
     
     private final String value;
 

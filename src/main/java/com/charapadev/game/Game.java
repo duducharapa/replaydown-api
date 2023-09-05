@@ -6,6 +6,7 @@ public class Game {
 
     // Properties
     private String format;
+    private int turns = 0;
     private Player player1;
     private Player player2;
 
@@ -16,9 +17,17 @@ public class Game {
         this.player2 = player2;
     }
 
+    public void addTurn() {
+        turns++;
+    }
+
     // Getters
     public String getFormat() {
         return format;
+    }
+
+    public int getTurns() {
+        return turns;
     }
 
     public Player getPlayer1() {
